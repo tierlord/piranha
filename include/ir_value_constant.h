@@ -47,8 +47,7 @@ namespace piranha {
         template <typename _T>
         const _T validateData(const _T &data, bool recordErrors = false) { return data; }
 
-        template <>
-        const piranha::native_string validateData<piranha::native_string>(const piranha::native_string &data, bool recordErrors) {
+        const piranha::native_string validateData(const piranha::native_string &data, bool recordErrors) {
             piranha::native_string res;
             piranha::native_string::const_iterator it = data.begin();
             while (it != data.end()) {
@@ -71,6 +70,7 @@ namespace piranha {
             return res;
         }
 
+
         std::string valueToString() const {
             std::stringstream ss;
             ss << m_value;
@@ -82,6 +82,8 @@ namespace piranha {
         T m_value;
         _TokenInfo m_token;
     };
+
+
 
     template <typename T, IrValue::ValueType TypeCode>
     class IrValueLiteral : public IrValueConstant<T, TypeCode> {
@@ -115,7 +117,7 @@ namespace piranha {
 
             IrLiteralNode<T> *expansion = TRACK(new IrLiteralNode<T>());
             expansion->setName("\"" + Base::valueToString() + "\"");
-            expansion->setLiteralData(Base::template validateData<T>(Base::m_value));
+            expansion->setLiteralData(Base::validateData(Base::m_value, false));
             expansion->setAttributes(attributeList);
             expansion->setLogicalParent(this);
             expansion->setScopeParent(this);
